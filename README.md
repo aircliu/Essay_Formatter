@@ -1,4 +1,4 @@
-# Essay_Formatter
+# All in one Essay Formatter!
 
 ![Essay Formatter](essay_formatter.gif)
 
