@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <style>
+        .sidebar {
+            width: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .block {
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blue {
+            background-color: #007BFF;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .blue:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <div class="block form-group">
+        <button class="blue" id="add_template_btn">Add Template</button>
+        <div id="template_inputs" style="display: none;">
+            <input type="text" id="title" placeholder="Title" />
+            <input type="text" id="first_name" placeholder="First Name" />
+            <input type="text" id="last_name" placeholder="Last Name" />
+            <input type="text" id="teacher_name" placeholder="Teacher's Name" />
+            <input type="text" id="class_name" placeholder="Class Name" />
+            <input type="text" id="current_date" readonly />
+            <button class="blue" id="save_template_btn">Save Template</button>
+        </div>
+        <select id="saved_templates" style="display: none;"></select>
+        <button class="blue" id="load_template_btn" style="display: none;">Load Selected Template</button>
+    </div>
+    <div id="formatter"></div>
+    <button class="blue" id="addText">Add Text to Doc</button>
+    <button class="blue" id="formatText">Format Text in Doc</button>
+</div>
+
+<script>
+    document.getElementById('add_template_btn').addEventListener('click', function() {
+        this.style.display = 'none';
+        document.getElementById('template_inputs').style.display = 'block';
+    });
+
+    document.getElementById('addText').addEventListener('click', function() {
+    var firstName = document.getElementById('first_name').value;
+    var lastName = document.getElementById('last_name').value;
+    var teacherName = document.getElementById('teacher_name').value;
+    var className = document.getElementById('class_name').value;
+    var currentDate = document.getElementById('current_date').value;
+    google.script.run.addHeaderToGoogleDoc(firstName, lastName, teacherName, className, currentDate);
+});
+
+
+ document.getElementById('save_template_btn').addEventListener('click', function() {
+    var templateData = {
+        title: document.getElementById('title').value,
+        firstName: document.getElementById('first_name').value,
+        lastName: document.getElementById('last_name').value,
+        teacherName: document.getElementById('teacher_name').value,
+        className: document.getElementById('class_name').value,
+        currentDate: document.getElementById('current_date').value
+    };
+    google.script.run.saveTemplate(templateData);
+    retrieveSavedTemplates();  // Fetch templates right after saving.
+    alert('Template saved!');
+});
+
+    function retrieveSavedTemplates() {
+    google.script.run.withSuccessHandler(function(templates) {
+        const selectBox = document.getElementById('saved_templates');
+        const loadButton = document.getElementById('load_template_btn');
+
+        if (templates && templates.length > 0) {
+            selectBox.innerHTML = '';
+            templates.forEach((template, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = template.title || 'Untitled Template';
+                selectBox.appendChild(option);
+            });
+            selectBox.style.display = 'block';
+            loadButton.style.display = 'block';
+        } else {
+            selectBox.style.display = 'none';
+            loadButton.style.display = 'none';
+        }
+    }).getSavedTemplates();
+}
+
+    document.getElementById('load_template_btn').addEventListener('click', function() {
+    const button = this;
+    button.disabled = true;
+    button.innerText = "Loading..."; // Provide a feedback
+
+    const templates = document.getElementById('saved_templates');
+    const selectedTemplate = templates.options[templates.selectedIndex].value;
+
+    google.script.run.withSuccessHandler(function(allTemplates) {
+        const templateData = allTemplates[selectedTemplate];
+        document.getElementById('title').value = templateData.title || '';
+        document.getElementById('first_name').value = templateData.firstName || '';
+        document.getElementById('last_name').value = templateData.lastName || '';
+        document.getElementById('teacher_name').value = templateData.teacherName || '';
+        document.getElementById('class_name').value = templateData.className || '';
+        document.getElementById('current_date').value = templateData.currentDate || '';
+
+        button.disabled = false; // Re-enable the button
+        button.innerText = "Load Selected Template"; // Restore the original text
+    }).getSavedTemplates();
+});
+
+    document.getElementById('formatText').addEventListener('click', function() {
+        google.script.run.formatTextInGoogleDoc();
+    });
+
+    window.onload = function() {
+        var today = new Date();
+        var formattedDate = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current_date').value = formattedDate;
+        retrieveSavedTemplates();
+    };
+
+</script>
+</body>
+</html>
