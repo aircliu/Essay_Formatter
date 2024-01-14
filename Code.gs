@@ -29,10 +29,12 @@ const formatGoogleDoc = (firstName, lastName, prof, course) => {
   const currentDate = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "MMMM dd, yyyy");
 
   // Check and replace or insert the first four paragraphs
-  replaceOrInsertParagraph(body, 0, `${firstName} ${lastName}`);
-  replaceOrInsertParagraph(body, 1, prof);
-  replaceOrInsertParagraph(body, 2, course);
-  replaceOrInsertParagraph(body, 3, currentDate);
+  body.insertParagraph(0, `${firstName} ${lastName}`);
+  body.insertParagraph(1, prof);
+  body.insertParagraph(2, course);
+  body.insertParagraph(3, currentDate);
+
+  formatTextInGoogleDoc();
 
   // Save and close the document
   doc.saveAndClose();
@@ -57,6 +59,7 @@ function replaceOrInsertParagraph(body, index, text) {
 const saveTemplate = (templateData, index) => {
   const scriptProperties = PropertiesService.getScriptProperties();
   let templates = JSON.parse(scriptProperties.getProperty("TEMPLATES") || "[]");
+  Logger.log(templates);
 
   if (index !== undefined && index >= 0 && index < templates.length) {
     // Update existing template
@@ -89,10 +92,11 @@ const formatTextInGoogleDoc = () => {
   const body = doc.getBody();
 
   const paragraphs = body.getParagraphs();
-  for (let i = 0; i < Math.min(paragraphs.length, 4); i++) {
+  for (let i = 0; i < Math.min(paragraphs.length); i++) {
     const line = paragraphs[i].editAsText();
     line.setFontFamily("Times New Roman");
     line.setFontSize(12);
+    paragraphs[i].setLineSpacing(2.0);
   }
 
   // Save and close the document
@@ -199,6 +203,20 @@ function saveEditedTemplate(index, editedTemplateData) {
     return false; // Indicate failure
   }
 }
+
+const deleteTemplate = (index) => {
+  const scriptProperties = PropertiesService.getScriptProperties();
+  let templates = JSON.parse(scriptProperties.getProperty("TEMPLATES") || "[]");
+
+  if (index >= 0 && index < templates.length) {
+    templates.splice(index, 1); // Remove the template at the specified index
+    scriptProperties.setProperty("TEMPLATES", JSON.stringify(templates));
+    return true; // Indicate successful deletion
+  } else {
+    return false; // Indicate failure or invalid index
+  }
+};
+
 
 
 
