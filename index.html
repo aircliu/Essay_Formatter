@@ -1,295 +1,359 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <base target="_top" />
     <style>
-      /* CSS styles for the sidebar */
-      .sidebar {
-        width: 100%;
-        font-family: Arial, sans-serif;
-        background-color: #f2f2f2;
-        padding: 20px;
-        border-radius: 5px;
-      }
-      .block, .form-group {
-        margin-bottom: 10px;
-        display: flex;
-        flex-direction: column;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      label {
-        display: block;
-        margin: 5px 0;
-        font-weight: bold;
-      }
-      input[type="text"], select {
-        width: 100%;
-        padding: 10px;
-        margin: 5px 0;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        font-size: 16px;
-      }
-      .blue {
-        background-color: #007bff;
-        color: white;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-        cursor: pointer;
-        transition: all 0.3s ease 0s;
-      }
-      .blue:hover {
-        background-color: #0056b3;
-        box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.2);
-        transform: translateY(-7px);
-      }
-      .button:hover {
-        background-color: #1e87d6;
-      }
-      .template-title {
-        display: flex;
-        align-items: center;
-      }
-      .template-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .template-item.selected {
-        background-color: #f0f0f0;
-      }
-      .button-group {
-        display: flex;
-        justify-content: space-between;
-      }
+        /* CSS styles for the sidebar */
+        .sidebar {
+            width: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .block, .form-group {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+            font-weight: bold;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+        .blue {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease 0s;
+        }
+        .blue:hover {
+            background-color: #0056b3;
+            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-7px);
+        }
+        .button:hover {
+            background-color: #1e87d6;
+        }
+        .template-title {
+            display: flex;
+            align-items: center;
+        }
+        .template-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .template-item.selected {
+            background-color: #f0f0f0;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div class="sidebar">
-      <!-- Create Template Section -->
-      <div class="block form-group">
-        <button class="blue oval-button" id="add_template_btn">Create Template</button>
-        <div id="template_inputs" style="display: none">
-          <!-- Template input fields -->
-          <label for="title">Title:</label>
-          <input type="text" id="title" placeholder="Title" />
-          <label for="first_name">First Name:</label>
-          <input type="text" id="first_name" placeholder="First Name" />
-          <label for="last_name">Last Name:</label>
-          <input type="text" id="last_name" placeholder="Last Name" />
-          <label for="teacher_name">Teacher's Name:</label>
-          <input type="text" id="teacher_name" placeholder="Teacher's Name" />
-          <label for="class_name">Class Name:</label>
-          <input type="text" id="class_name" placeholder="Class Name" />
-          <div class="button-group">
-            <button class="blue" id="save_template_btn">Save Template</button>
-            <button class="blue" id="close_edit_mode_btn">Close</button>
+        <!-- Create Template Section -->
+        <div class="block form-group">
+            <button class="blue oval-button" id="add_template_btn">Create Template</button>
+            <div id="template_inputs" style="display: none">
+                <!-- Template input fields -->
+                <label for="title">Title:</label>
+                <input type="text" id="title" placeholder="Title" />
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" placeholder="First Name" />
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" placeholder="Last Name" />
+                <label for="teacher_name">Teacher's Name:</label>
+                <input type="text" id="teacher_name" placeholder="Teacher's Name" />
+                <label for="class_name">Class Name:</label>
+                <input type="text" id="class_name" placeholder="Class Name" />
+                <div class="button-group">
+                    <button class="blue" id="save_template_btn">Save Template</button>
+                    <button class="blue" id="close_edit_mode_btn">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Templates Section -->
+        <div class="form-group">
+            <h2>Current Templates</h2>
+            <div id="current_templates"></div>
+            <button class="blue" id="load_template_btn">Load Template</button>
+        </div>
+
+        <!-- Edit Templates Section -->
+        <div class="form-group">
+            <h2>Edit Templates</h2>
+            <button class="blue" id="show_edit_options_btn">Edit Templates</button>
+            <div id="edit_template_options" style="display: none;">
+                <div id="template_to_edit"></div>
+                <button class="blue" id="edit_template_btn">Edit Selected Template</button>
+            </div>
+        </div>
+
+        <!-- Delete Templates Section -->
+        <div class="form-group">
+          <h2>Delete Templates</h2>
+          <button class="blue" id="show_delete_options_btn">Delete Templates</button>
+          <div id="delete_template_options" style="display: none;">
+            <div id="template_to_delete"></div>
+            <button class="blue" id="delete_template_btn">Delete Selected Template</button>
           </div>
         </div>
-      </div>
 
-      <!-- Current Templates Section -->
-      <div class="form-group">
-        <h2>Current Templates</h2>
-        <div id="current_templates"></div>
-        <button class="blue" id="load_template_btn">Load Template</button>
-      </div>
 
-      <!-- Edit Templates Section -->
-      <div class="form-group">
-        <h2>Edit Templates</h2>
-        <button class="blue" id="show_edit_options_btn">Edit Templates</button>
-        <div id="edit_template_options" style="display: none;">
-          <div id="template_to_edit"></div>
-          <button class="blue" id="edit_template_btn">Edit Selected Template</button>
-        </div>
-      </div>
+
     </div>
 
     <script>
-      document.getElementById("add_template_btn").addEventListener("click", function () {
-        this.style.display = "none";
-        document.getElementById("template_inputs").style.display = "block";
-      });
-
-      document.getElementById("save_template_btn").addEventListener("click", function() {
-        var templateData = {
-          title: document.getElementById("title").value,
-          firstName: document.getElementById("first_name").value,
-          lastName: document.getElementById("last_name").value,
-          teacherName: document.getElementById("teacher_name").value,
-          className: document.getElementById("class_name").value
-        };
-        google.script.run.withSuccessHandler(function() {
-          alert("Template saved successfully.");
-          retrieveSavedTemplates();
-        }).saveTemplate(templateData);
-      });
-
-      function retrieveSavedTemplates() {
-        google.script.run.withSuccessHandler(renderTemplates).getSavedTemplates();
-      }
-
-      function renderTemplates(templates) {
-        const container = document.getElementById('current_templates');
-        container.innerHTML = '';
-        templates.forEach((template, index) => {
-          const templateDiv = document.createElement('div');
-          templateDiv.className = 'template-item';
-
-          const radioBtn = document.createElement('input');
-          radioBtn.type = 'radio';
-          radioBtn.name = 'template';
-          radioBtn.value = index;
-          radioBtn.id = 'template_' + index;
-
-          const label = document.createElement('label');
-          label.htmlFor = 'template_' + index;
-          label.textContent = template.title || 'Untitled Template';
-
-          templateDiv.appendChild(label);
-          templateDiv.appendChild(radioBtn);
-
-          container.appendChild(templateDiv);
+        document.getElementById("add_template_btn").addEventListener("click", function () {
+            this.style.display = "none";
+            document.getElementById("template_inputs").style.display = "block";
         });
-      }
 
-      document.getElementById("show_edit_options_btn").addEventListener("click", function() {
-        document.getElementById("edit_template_options").style.display = "block";
-        renderTemplatesToEdit();
+        document.getElementById("save_template_btn").addEventListener("click", function() {
+            var templateData = {
+                title: document.getElementById("title").value,
+                firstName: document.getElementById("first_name").value,
+                lastName: document.getElementById("last_name").value,
+                teacherName: document.getElementById("teacher_name").value,
+                className: document.getElementById("class_name").value
+            };
+            google.script.run.withSuccessHandler(function() {
+                alert("Template saved successfully.");
+                retrieveSavedTemplates();
+            }).saveTemplate(templateData);
+        });
+
+        function retrieveSavedTemplates() {
+            google.script.run.withSuccessHandler(renderTemplates).getSavedTemplates();
+        }
+
+        function renderTemplates(templates) {
+            const container = document.getElementById('current_templates');
+            container.innerHTML = '';
+            templates.forEach((template, index) => {
+                const templateDiv = document.createElement('div');
+                templateDiv.className = 'template-item';
+
+                const radioBtn = document.createElement('input');
+                radioBtn.type = 'radio';
+                radioBtn.name = 'template';
+                radioBtn.value = index;
+                radioBtn.id = 'template_' + index;
+
+                const label = document.createElement('label');
+                label.htmlFor = 'template_' + index;
+                label.textContent = template.title || 'Untitled Template';
+
+                templateDiv.appendChild(label);
+                templateDiv.appendChild(radioBtn);
+
+                container.appendChild(templateDiv);
+            });
+        }
+
+        document.getElementById("show_edit_options_btn").addEventListener("click", function() {
+            document.getElementById("edit_template_options").style.display = "block";
+            renderTemplatesToEdit();
+        });
+
+        function renderTemplatesToEdit() {
+            google.script.run.withSuccessHandler(function(templates) {
+                const container = document.getElementById('template_to_edit');
+                container.innerHTML = '';
+                templates.forEach((template, index) => {
+                    const templateDiv = document.createElement('div');
+                    templateDiv.className = 'template-item';
+
+                    const label = document.createElement('label');
+                    label.htmlFor = 'template_edit_' + index;
+                    label.textContent = template.title || 'Untitled Template';
+
+                    const radioBtn = document.createElement('input');
+                    radioBtn.type = 'radio';
+                    radioBtn.name = 'template_edit';
+                    radioBtn.value = index;
+                    radioBtn.id = 'template_edit_' + index;
+
+                    templateDiv.appendChild(label);
+                    templateDiv.appendChild(radioBtn);
+
+                    container.appendChild(templateDiv);
+                });
+            }).getSavedTemplates();
+        }
+
+        document.getElementById("load_template_btn").addEventListener("click", function() {
+            const selectedTemplateIndex = document.querySelector('input[name="template"]:checked')?.value;
+            if (selectedTemplateIndex !== undefined) {
+                google.script.run.loadTemplateByIndex(selectedTemplateIndex);
+            } else {
+                alert("Please select a template to load.");
+            }
+        });
+
+        document.getElementById("edit_template_btn").addEventListener("click", function() {
+            const selectedTemplateIndex = document.querySelector('input[name="template_edit"]:checked')?.value;
+            if (selectedTemplateIndex !== undefined) {
+                google.script.run.withSuccessHandler(function(templateData) {
+                    displayEditForm(templateData, selectedTemplateIndex);
+                }).getTemplateData(selectedTemplateIndex);
+            } else {
+                alert("Please select a template to edit.");
+            }
+        });
+
+        document.getElementById("show_delete_options_btn").addEventListener("click", function() {
+        document.getElementById("delete_template_options").style.display = "block";
+        renderTemplatesToDelete();
       });
 
-      function renderTemplatesToEdit() {
-        google.script.run.withSuccessHandler(function(templates) {
-          const container = document.getElementById('template_to_edit');
-          container.innerHTML = '';
-          templates.forEach((template, index) => {
-            const templateDiv = document.createElement('div');
-            templateDiv.className = 'template-item';
-
-            const label = document.createElement('label');
-            label.htmlFor = 'template_edit_' + index;
-            label.textContent = template.title || 'Untitled Template';
-
-            const radioBtn = document.createElement('input');
-            radioBtn.type = 'radio';
-            radioBtn.name = 'template_edit';
-            radioBtn.value = index;
-            radioBtn.id = 'template_edit_' + index;
-
-            templateDiv.appendChild(label);
-            templateDiv.appendChild(radioBtn);
-
-            container.appendChild(templateDiv);
-          });
-        }).getSavedTemplates();
-      }
-
-      document.getElementById("load_template_btn").addEventListener("click", function() {
-    const selectedTemplateIndex = document.querySelector('input[name="template"]:checked')?.value;
-    if (selectedTemplateIndex !== undefined) {
-        google.script.run.loadTemplateByIndex(selectedTemplateIndex);
-    } else {
-        alert("Please select a template to load.");
-    }
-});
-
-
-      document.getElementById("edit_template_btn").addEventListener("click", function() {
-        const selectedTemplateIndex = document.querySelector('input[name="template_edit"]:checked')?.value;
+      document.getElementById("delete_template_btn").addEventListener("click", function() {
+        const selectedTemplateIndex = document.querySelector('input[name="template_delete"]:checked')?.value;
         if (selectedTemplateIndex !== undefined) {
-          google.script.run.withSuccessHandler(function(templateData) {
-            displayEditForm(templateData, selectedTemplateIndex);
-          }).getTemplateData(selectedTemplateIndex);
+          google.script.run.withSuccessHandler(function() {
+            alert("Template deleted successfully.");
+            retrieveSavedTemplates(); // Refresh the templates list
+            document.getElementById("delete_template_options").style.display = "none";
+
+          }).deleteTemplate(selectedTemplateIndex);
         } else {
-          alert("Please select a template to edit.");
+          alert("Please select a template to delete.");
         }
       });
 
-      // Corrected event listener for the "Close" button
-  document.getElementById("close_edit_mode_btn").addEventListener("click", function() {
-    document.getElementById("template_inputs").style.display = "none";
-    document.getElementById("add_template_btn").style.display = "block";
-    resetForm();
-  });
+      function renderTemplatesToDelete() {
+    google.script.run.withSuccessHandler(function(templates) {
+      const container = document.getElementById('template_to_delete');
+      container.innerHTML = ''; // Clear any existing content
 
-  function resetForm() {
-    document.getElementById("title").value = "";
-    document.getElementById("first_name").value = "";
-    document.getElementById("last_name").value = "";
-    document.getElementById("teacher_name").value = "";
-    document.getElementById("class_name").value = "";
+      if (templates.length === 0) {
+        container.innerHTML = '<p>No templates available to delete.</p>';
+        return;
+      }
+
+      templates.forEach((template, index) => {
+        const templateDiv = document.createElement('div');
+        templateDiv.className = 'template-item';
+
+        const label = document.createElement('label');
+        label.htmlFor = 'template_delete_' + index;
+        label.textContent = template.title || 'Untitled Template';
+
+        const radioBtn = document.createElement('input');
+        radioBtn.type = 'radio';
+        radioBtn.name = 'template_delete';
+        radioBtn.value = index;
+        radioBtn.id = 'template_delete_' + index;
+
+        templateDiv.appendChild(label);
+        templateDiv.appendChild(radioBtn);
+        container.appendChild(templateDiv);
+      });
+    }).getSavedTemplates();
   }
 
-      function displayEditForm(templateData, index) {
-        document.getElementById("template_inputs").style.display = "block";
-        document.getElementById("title").value = templateData.title;
-        document.getElementById("first_name").value = templateData.firstName;
-        document.getElementById("last_name").value = templateData.lastName;
-        document.getElementById("teacher_name").value = templateData.teacherName;
-        document.getElementById("class_name").value = templateData.className;
 
-        const saveBtn = document.getElementById("save_template_btn");
-        saveBtn.textContent = "Update Template";
-        saveBtn.onclick = function() {
-          updateTemplate(index);
-        };
-      }
 
-      function updateTemplate(index) {
-        const updatedTemplateData = {
-          title: document.getElementById("title").value,
-          firstName: document.getElementById("first_name").value,
-          lastName: document.getElementById("last_name").value,
-          teacherName: document.getElementById("teacher_name").value,
-          className: document.getElementById("class_name").value
-        };
-
-        google.script.run.withSuccessHandler(function() {
-          alert("Template updated successfully.");
-          closeEditMode();
-        }).saveEditedTemplate(index, updatedTemplateData);
-      }
-
-      function closeEditMode() {
-        document.getElementById("edit_template_options").style.display = "none";
-        document.getElementById("current_templates").style.display = "block";
-        resetFormAndRefreshTemplates();
-      }
-
-      function resetFormAndRefreshTemplates() {
-        document.getElementById("title").value = "";
-        document.getElementById("first_name").value = "";
-        document.getElementById("last_name").value = "";
-        document.getElementById("teacher_name").value = "";
-        document.getElementById("class_name").value = "";
-
-        const saveBtn = document.getElementById("save_template_btn");
-        saveBtn.textContent = "Save Template";
-        saveBtn.onclick = document.getElementById("save_template_btn").addEventListener("click", function() {
-          var templateData = {
-            title: document.getElementById("title").value,
-            firstName: document.getElementById("first_name").value,
-            lastName: document.getElementById("last_name").value,
-            teacherName: document.getElementById("teacher_name").value,
-            className: document.getElementById("class_name").value
-          };
-          google.script.run.withSuccessHandler(function() {
-            alert("Template saved successfully.");
-            retrieveSavedTemplates();
-          }).saveTemplate(templateData);
+        // Corrected event listener for the "Close" button
+        document.getElementById("close_edit_mode_btn").addEventListener("click", function() {
+            document.getElementById("template_inputs").style.display = "none";
+            document.getElementById("add_template_btn").style.display = "block";
+            resetForm();
         });
 
-        retrieveSavedTemplates();
-      }
+        function resetForm() {
+            document.getElementById("title").value = "";
+            document.getElementById("first_name").value = "";
+            document.getElementById("last_name").value = "";
+            document.getElementById("teacher_name").value = "";
+            document.getElementById("class_name").value = "";
+        }
 
-      retrieveSavedTemplates();
+        function displayEditForm(templateData, index) {
+            document.getElementById("template_inputs").style.display = "block";
+            document.getElementById("title").value = templateData.title;
+            document.getElementById("first_name").value = templateData.firstName;
+            document.getElementById("last_name").value = templateData.lastName;
+            document.getElementById("teacher_name").value = templateData.teacherName;
+            document.getElementById("class_name").value = templateData.className;
+
+            const saveBtn = document.getElementById("save_template_btn");
+            saveBtn.textContent = "Update Template";
+            saveBtn.onclick = function() {
+                updateTemplate(index);
+            };
+        }
+
+        function updateTemplate(index) {
+            const updatedTemplateData = {
+                title: document.getElementById("title").value,
+                firstName: document.getElementById("first_name").value,
+                lastName: document.getElementById("last_name").value,
+                teacherName: document.getElementById("teacher_name").value,
+                className: document.getElementById("class_name").value
+            };
+
+            google.script.run.withSuccessHandler(function() {
+                alert("Template updated successfully.");
+                closeEditMode();
+            }).saveEditedTemplate(index, updatedTemplateData);
+        }
+
+        function closeEditMode() {
+            document.getElementById("edit_template_options").style.display = "none";
+            document.getElementById("current_templates").style.display = "block";
+            resetFormAndRefreshTemplates();
+        }
+
+        function resetFormAndRefreshTemplates() {
+            document.getElementById("title").value = "";
+            document.getElementById("first_name").value = "";
+            document.getElementById("last_name").value = "";
+            document.getElementById("teacher_name").value = "";
+            document.getElementById("class_name").value = "";
+
+            const saveBtn = document.getElementById("save_template_btn");
+            saveBtn.textContent = "Save Template";
+            saveBtn.onclick = document.getElementById("save_template_btn").addEventListener("click", function() {
+                var templateData = {
+                    title: document.getElementById("title").value,
+                    firstName: document.getElementById("first_name").value,
+                    lastName: document.getElementById("last_name").value,
+                    teacherName: document.getElementById("teacher_name").value,
+                    className: document.getElementById("class_name").value
+                };
+                google.script.run.withSuccessHandler(function() {
+                    alert("Template saved successfully.");
+                    retrieveSavedTemplates();
+                }).saveTemplate(templateData);
+            });
+
+            retrieveSavedTemplates();
+        }
+
+        retrieveSavedTemplates();
     </script>
   </body>
 </html>
