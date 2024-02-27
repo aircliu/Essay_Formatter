@@ -34,21 +34,34 @@
             font-size: 16px;
         }
         .blue {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: all 0.3s ease 0s;
-        }
-        .blue:hover {
-            background-color: #0056b3;
-            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.2);
-            transform: translateY(-7px);
-        }
+        background-color: #007bff;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.3s ease 0s;
+        margin-bottom: 10px; /* Add spacing between buttons */
+        display: block; /* Ensure buttons are block-level for full width */
+        width: 90%; /* Adjust width as needed */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+      .blue:hover {
+          background-color: #0056b3;
+          box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.2);
+          transform: translateY(-7px);
+      }
+
+      /* Additional styling for container to ensure vertical stacking */
+      #current_templates {
+          display: flex;
+          flex-direction: column;
+          align-items: center; /* Center-align the buttons */
+      }
         .button:hover {
             background-color: #1e87d6;
         }
@@ -70,11 +83,8 @@
         }
     </style>
 
-<!-- Google OAuth Stuff -->
+    <!-- Google OAuth Stuff -->
     <base target="_top">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-auth.js"></script>
@@ -187,11 +197,18 @@
           </div>
         </div>
 
+        <button onclick="openPopupFromSidebar()">Open Popup</button>
+
+
 
 
     </div>
 
     <script>
+      function openPopupFromSidebar() {
+        google.script.run.openSimplePopup();
+      }
+
         document.getElementById("add_template_btn").addEventListener("click", function () {
             this.style.display = "none";
             document.getElementById("template_inputs").style.display = "block";
@@ -216,28 +233,28 @@
         }
 
         function renderTemplates(templates) {
-            const container = document.getElementById('current_templates');
-            container.innerHTML = '';
-            templates.forEach((template, index) => {
-                const templateDiv = document.createElement('div');
-                templateDiv.className = 'template-item';
+        const container = document.getElementById('current_templates');
+        container.innerHTML = ''; // Clear existing templates
+        templates.forEach((template, index) => {
+            // Create a button for each template
+            const button = document.createElement('button');
+            button.className = 'blue'; // Use the same styling as other buttons
+            button.textContent = template.title || 'Untitled Template';
+            
+            // Store the index in a data attribute
+            button.setAttribute('data-index', index);
 
-                const radioBtn = document.createElement('input');
-                radioBtn.type = 'radio';
-                radioBtn.name = 'template';
-                radioBtn.value = index;
-                radioBtn.id = 'template_' + index;
+            // Set up the click event listener
+            button.addEventListener('click', function() {
+    google.script.run.loadTemplateByIndex(this.getAttribute('data-index'));
+    });
 
-                const label = document.createElement('label');
-                label.htmlFor = 'template_' + index;
-                label.textContent = template.title || 'Untitled Template';
+            
+            container.appendChild(button);
+        });
+    }
 
-                templateDiv.appendChild(label);
-                templateDiv.appendChild(radioBtn);
 
-                container.appendChild(templateDiv);
-            });
-        }
 
         document.getElementById("show_edit_options_btn").addEventListener("click", function() {
             document.getElementById("edit_template_options").style.display = "block";
@@ -357,6 +374,18 @@
             document.getElementById("class_name").value = "";
         }
 
+        function loadTemplateByIndex(index) {
+        google.script.run.withSuccessHandler(function() {
+            console.log("Template loaded successfully.");
+            // Optionally, refresh your UI here or give the user feedback
+        })
+        .withFailureHandler(function(error) {
+            console.error("Error loading template: " + error);
+        })
+        .loadTemplateByIndex(index);
+    }
+
+
         function displayEditForm(templateData, index) {
             document.getElementById("template_inputs").style.display = "block";
             document.getElementById("title").value = templateData.title;
@@ -421,8 +450,8 @@
 
         retrieveSavedTemplates();
     </script>
-
-  <!-- Google OAuth Stuff -->
+    
+      <!-- Google OAuth Stuff -->
       <div class="container center-align">
         <br /><br /><h1>Firebase and Google Apps Script</h1><br /><h3>Login using your Google account via Firebase Auth</h3><br /><br />
         <div id="firebaseui-auth-container"></div>
@@ -448,6 +477,5 @@
             }
         </script>
         
-    </div>
   </body>
 </html>
