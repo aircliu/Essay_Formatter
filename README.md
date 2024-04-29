@@ -4,4 +4,4 @@
 
 
 
-Currently still in development and working on getting on the google workspace store!
+Currently getting reviewed to get deployed on the google workspace store!
